@@ -7,7 +7,7 @@ Prints one line per failing page and a summary. Exit code 1 if any must-have fai
 import json, os, re, sys
 from bs4 import BeautifulSoup
 
-DIST = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else "docs"
+DIST = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else "."
 VERBOSE = "--verbose" in sys.argv
 CFG = json.load(open("site-config.json"))
 SITE = CFG["siteUrl"].rstrip("/")
@@ -207,7 +207,8 @@ def check(path, html):
 
 def main():
     pages = []
-    for dp, _, fs in os.walk(DIST):
+    for dp, dirs, fs in os.walk(DIST):
+        dirs[:] = [x for x in dirs if not x.startswith(".") and x not in ("tools", "data", "brand", "assets", "docs")]
         for f in fs:
             if f == "index.html":
                 pages.append(os.path.join(dp, f))
