@@ -85,12 +85,8 @@ def cls_name(c):
 # ---------------------------------------------------------------- shared chrome
 FONTS = "https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap"
 
-MARK = ('<svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><rect x="3" y="6" width="34" height="6" rx="1"/>'
-        '<rect x="17" y="12" width="6" height="16"/><rect x="3" y="28" width="34" height="6" rx="1"/>'
-        '<path d="M0 38c5-3 9-3 13 0s9 3 14 0 9-3 13 0" fill="none" stroke-width="2.4"/></svg>')
 
-
-def head(title, desc, path, ld, og_img="/assets/img/hero-1600.jpg", extra=""):
+def head(title, desc, path, ld, og_img="/assets/logo.png", extra=""):
     canon = SITE + path
     blocks = "\n".join(f'<script type="application/ld+json">{json.dumps(b, ensure_ascii=False)}</script>' for b in ld)
     return f"""<!doctype html>
@@ -113,7 +109,9 @@ def head(title, desc, path, ld, og_img="/assets/img/hero-1600.jpg", extra=""):
 <meta name="twitter:description" content="{e(desc)}">
 <meta name="twitter:image" content="{og_img if og_img.startswith('http') else SITE + og_img}">
 <meta name="theme-color" content="#16302B">
-<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/favicon-48.png" type="image/png" sizes="48x48">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS}">
@@ -128,7 +126,7 @@ def head(title, desc, path, ld, og_img="/assets/img/hero-1600.jpg", extra=""):
 def header():
     return f"""<header class="top" data-shrink>
   <div class="wrap top-in">
-    <a class="brand" href="/">{MARK}<span>Pass Your <b>Mississippi</b> Contractor Exam</span></a>
+    <a class="brand" href="/"><img class="logo" src="/assets/logo-nav-light.png" width="217" height="56" alt="Pass Your Mississippi Contractor Exam"></a>
     <nav class="nav" aria-label="Main">
       <a href="/#find-your-license">Licenses</a>
       <a href="/how-to-get-licensed/">How to get licensed</a>
@@ -152,7 +150,7 @@ def footer():
     <div class="f-river" aria-hidden="true"></div>
     <div class="f-grid">
       <div class="f-brand">
-        <a class="brand" href="/">{MARK}<span>Pass Your <b>Mississippi</b> Contractor Exam</span></a>
+        <a class="brand" href="/"><img class="logo" src="/assets/logo-nav-light.png" width="217" height="56" alt="Pass Your Mississippi Contractor Exam"></a>
         <p>{e(CFG['tagline'])}</p>
         <p>Orders ship from 1 Exam Prep. Call <a href="tel:{PHONE_TEL}">{PHONE}</a> or email <a href="mailto:{EMAIL}">{EMAIL}</a>.</p>
       </div>
@@ -167,7 +165,7 @@ def footer():
 
 
 ORG = {"@type": "Organization", "@id": SITE + "/#org", "name": BRAND, "url": SITE + "/",
-       "logo": SITE + "/assets/logo.png", "telephone": PHONE_TEL, "email": EMAIL,
+       "logo": {"@type": "ImageObject", "url": SITE + "/assets/icon-512.png", "width": 512, "height": 512}, "image": SITE + "/assets/logo.png", "telephone": PHONE_TEL, "email": EMAIL,
        "parentOrganization": {"@type": "Organization", "name": "1 Exam Prep", "url": "https://1examprep.com/"},
        "sameAs": [v for v in CFG.get("social", {}).values() if v]}
 PUB = {"@type": "Organization", "name": BRAND, "url": SITE + "/"}
@@ -233,7 +231,7 @@ def price_span(p):
 
 def card(p, show_class=False):
     img = (f'<img src="{e(p["img"])}&width=480" alt="{e(p["alt"])}" width="480" height="480" loading="lazy" decoding="async">'
-           if p["img"] else f'<div class="noimg" role="img" aria-label="{e(p["title"])}">{MARK}</div>')
+           if p["img"] else f'<div class="noimg" role="img" aria-label="{e(p["title"])}"><img src="/assets/icon-192.png" alt="Pass Your Mississippi Contractor Exam hard hat icon" width="96" height="96"></div>')
     cmpx = f'<s>{money(p["compare"])}</s> ' if p["compare"] > p["hi"] else ""
     sub = e(cls_name(p["cls"])) if show_class else e(p["tlabel"])
     return (f'<article class="pcard reveal" data-type="{p["tkey"]}"><a href="{p["url"]}">{img}'
@@ -427,7 +425,7 @@ def product_page(p):
     buy = f"https://1examprep.com/cart/{p['variant']}:1"
     cmp = f'<s>{money(p["compare"])}</s>' if p["compare"] > p["hi"] else ""
     img = (f'<img src="{e(p["img"])}&width=900" alt="{e(p["alt"])}" width="900" height="900" fetchpriority="high">'
-           if p["img"] else f'<div class="noimg big" role="img" aria-label="{e(p["title"])}">{MARK}</div>')
+           if p["img"] else f'<div class="noimg big" role="img" aria-label="{e(p["title"])}"><img src="/assets/icon-192.png" alt="Pass Your Mississippi Contractor Exam hard hat icon" width="96" height="96"></div>')
     sibs = [s for s in by_class[c] if s is not p][:3]
     sib = "".join(f'<li><a href="{s["url"]}">{e(s["title"])}</a> <span>{money(s["lo"])}</span></li>' for s in sibs)
     qas = [
@@ -477,7 +475,7 @@ def product_page(p):
 </div>
 </main>
 {footer()}"""
-    write(path, head(f"{title}", desc, path, [crumbs(crumb), prod, page_ld, faq_ld(qas)], og_img=p["img"] or "/assets/img/hero-1600.jpg") + body)
+    write(path, head(f"{title}", desc, path, [crumbs(crumb), prod, page_ld, faq_ld(qas)], og_img=p["img"] or "/assets/logo.png") + body)
 
 
 # ---------------------------------------------------------------- home
