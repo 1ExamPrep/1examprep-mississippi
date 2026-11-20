@@ -576,7 +576,7 @@ def home():
       <p>Getting licensed in Mississippi takes 5 steps and usually 6 to 10 weeks. The board reviews the application before PSI lets you test, so file early and study while you wait. The full walkthrough is on the <a href="/how-to-get-licensed/">licensing guide</a>.</p>
       <ol class="timeline" data-timeline>{tl}</ol>
     </div>
-    <div class="band-img reveal">{pic("engineer", "Mississippi contractor in a white hard hat and hi-vis vest beside the river at sunset, with the State Capitol dome and a steel truss bridge behind her", w=1199, h=1312, sizes="(min-width: 900px) 40vw, 100vw")}</div>
+    <div class="band-img reveal"><picture><source media="(min-width: 900px)" type="image/webp" srcset="/assets/img/engineer-portrait-500.webp 500w, /assets/img/engineer-portrait-719.webp 719w" sizes="40vw"><source media="(min-width: 900px)" srcset="/assets/img/engineer-portrait-500.jpg 500w, /assets/img/engineer-portrait-719.jpg 719w" sizes="40vw"><source type="image/webp" srcset="/assets/img/engineer-600.webp 600w, /assets/img/engineer-1199.webp 1199w" sizes="100vw"><img src="/assets/img/engineer-600.jpg" srcset="/assets/img/engineer-600.jpg 600w, /assets/img/engineer-1199.jpg 1199w" sizes="100vw" width="1199" height="1312" alt="Mississippi contractor in a white hard hat and hi-vis vest beside the river at sunset, with the State Capitol dome and a steel truss bridge behind her" loading="lazy" decoding="async"></picture></div>
   </div>
 </section>
 <div class="wrap">
