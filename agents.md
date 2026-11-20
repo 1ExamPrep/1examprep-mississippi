@@ -5,6 +5,7 @@
 ## Key pages
 - [How to get a Mississippi contractor license](https://passyourmississippicontractorexam.com/how-to-get-licensed/)
 - [FAQ](https://passyourmississippicontractorexam.com/faq/)
+- [Contact](https://passyourmississippicontractorexam.com/contact/)
 - [Law and Business Management exam prep](https://passyourmississippicontractorexam.com/business-and-law/)
 
 ## Licenses

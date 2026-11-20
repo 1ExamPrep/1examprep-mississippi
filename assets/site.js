@@ -94,6 +94,32 @@
       if (q0) filter();
     }
 
+    /* contact form: the iframe and its script are added here so the served HTML has no iframe or body script */
+    var fe = d.querySelector(".form-embed");
+    if (fe) {
+      var id = fe.dataset.formId;
+      var fr = d.createElement("iframe");
+      fr.src = "https://app.1examprep.com/widget/form/" + id;
+      fr.id = "inline-" + id;
+      fr.title = fe.dataset.formName;
+      fr.style.cssText = "width:100%;height:" + fe.dataset.height + "px;border:none;border-radius:8px";
+      var attrs = {
+        "data-layout": "{'id':'INLINE'}", "data-trigger-type": "alwaysShow", "data-trigger-value": "",
+        "data-activation-type": "alwaysActivated", "data-activation-value": "",
+        "data-deactivation-type": "neverDeactivate", "data-deactivation-value": "",
+        "data-form-name": fe.dataset.formName, "data-height": fe.dataset.height,
+        "data-layout-iframe-id": "inline-" + id, "data-form-id": id,
+        "data-cookie-consent": "true", "data-cookie-consent-provider": "auto"
+      };
+      Object.keys(attrs).forEach(function (k) { fr.setAttribute(k, attrs[k]); });
+      fr.addEventListener("load", function () { fe.classList.add("loaded"); });
+      fe.appendChild(fr);
+      var sc = d.createElement("script");
+      sc.src = "https://app.1examprep.com/js/form_embed.js";
+      sc.async = true;
+      d.body.appendChild(sc);
+    }
+
     /* package-type chips on license pages */
     var chips = [].slice.call(d.querySelectorAll(".chip"));
     chips.forEach(function (ch) {

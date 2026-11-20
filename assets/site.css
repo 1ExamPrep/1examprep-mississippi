@@ -237,3 +237,9 @@ tbody tr:nth-child(even){background:#FBF8F2}
 }
 .phero .wrap>.crumbs{color:#B9C4BF;margin-top:0}
 .phero .wrap>.crumbs a{color:var(--lime)}
+
+/* contact form */
+.form-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;margin-top:18px;box-shadow:0 18px 40px -28px rgba(14,33,29,.45)}
+.form-embed{position:relative;min-height:200px}
+.form-fallback{margin:0;padding:12px 4px;color:var(--steel);font:500 .95rem var(--sans)}
+.form-embed.loaded .form-fallback{display:none}

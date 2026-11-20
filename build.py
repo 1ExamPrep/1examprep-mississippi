@@ -139,6 +139,7 @@ def header():
       <a href="/how-to-get-licensed/">How to get licensed</a>
       <a href="/business-and-law/">Law and Business exam</a>
       <a href="/faq/">FAQ</a>
+      <a href="/contact/">Contact</a>
     </nav>
     <a class="call" href="tel:{PHONE_TEL}">{PHONE}</a>
   </div>
@@ -159,7 +160,7 @@ def footer():
       <div class="f-brand">
         <a class="brand" href="/"><img class="logo" src="/assets/logo-nav-light.png" width="217" height="56" alt="Pass Your Mississippi Contractor Exam"></a>
         <p>{e(CFG['tagline'])}</p>
-        <p>Orders ship from 1 Exam Prep. Call <a href="tel:{PHONE_TEL}">{PHONE}</a> or email <a href="mailto:{EMAIL}">{EMAIL}</a>.</p>
+        <p>Orders ship from 1 Exam Prep. Call <a href="tel:{PHONE_TEL}">{PHONE}</a>, email <a href="mailto:{EMAIL}">{EMAIL}</a> or use the <a href="/contact/">contact form</a>.</p>
       </div>
       {''.join(groups)}
     </div>
@@ -252,7 +253,7 @@ POPULAR = ["building-construction", "residential-builder", "residential-remodele
 def rail_call():
     return (f'<div class="r-card r-call"><p class="r-h">Need help choosing?</p><p>Tell the 1 Exam Prep team your license and test date, '
             f'and they will match you with the right books.</p><a class="r-phone" href="tel:{PHONE_TEL}">{PHONE}</a>'
-            f'<p class="r-small">{EMAIL}</p></div>')
+            f'<p class="r-small">{EMAIL}</p><a href="/contact/">Send us a message</a></div>')
 
 
 def rail_class(c, ps, lo, first_hid):
@@ -728,9 +729,55 @@ def faq_page():
     write(path, head(title, desc, path, [crumbs(crumb), faq_ld(qas)]) + body)
 
 
+# ---------------------------------------------------------------- contact page
+FORM_ID = "1jGx4TPpXO5C3XkV5vuq"
+CONTACT_FAQ = [
+    ("How do I contact 1 Exam Prep about a Mississippi exam?", f"Use the form on this page, call {PHONE} or email {EMAIL}. All 3 reach the same 1 Exam Prep team that ships the orders."),
+    ("What should I put in my message?", "Name your license classification, your PSI test date if you have one, and which books you already own. That is enough to recommend the right package."),
+    ("Can you tell me which license I need?", "The team can walk you through the classifications. The Mississippi State Board of Contractors makes the final call on any application."),
+    ("Can I order by phone?", f"Yes. Call {PHONE} and the team can place the order with you, or send you a link to the right package."),
+    ("Where do I ask about an order I already placed?", f"Use the form or email {EMAIL} with your order number, and the team will look it up."),
+    ("Does 1 Exam Prep schedule my PSI exam?", "No. MSBOC approves your application and PSI emails the scheduling notice. The team can explain each step, and the application service can file the MSBOC paperwork for you."),
+]
+
+
+def contact_page():
+    path = "/contact/"
+    title = "Contact Us | Pass Your Mississippi Contractor Exam"
+    desc = f"Contact 1 Exam Prep about Mississippi contractor exam prep: send the form, call {PHONE} or email {EMAIL} for help choosing books and courses."
+    lead = (f"To reach 1 Exam Prep about a Mississippi contractor exam, send the form on this page, call {PHONE} or email {EMAIL}. "
+            "Tell us your license classification and your PSI test date, and the team will point you to the right books, "
+            "course or all-in-one package.")
+    crumb = [("Home", "/"), ("Contact", path)]
+    form = (f'<div class="form-card reveal"><div class="form-embed" data-form-id="{FORM_ID}" data-form-name="passyourmississippicontractorexam.com" data-height="560">'
+            f'<p class="form-fallback">The contact form is loading. If it does not appear, call <a href="tel:{PHONE_TEL}">{PHONE}</a> '
+            f'or email <a href="mailto:{EMAIL}">{EMAIL}</a>.</p></div></div>')
+    page_ld = {"@context": "https://schema.org", "@type": ["WebPage", "ContactPage"], "name": title, "url": SITE + path, "description": desc,
+               "dateModified": UPDATED, "publisher": PUB, "mainEntity": {"@type": "Organization", "name": BRAND, "url": SITE + "/",
+               "contactPoint": {"@type": "ContactPoint", "contactType": "customer service", "telephone": PHONE_TEL, "email": EMAIL,
+                                "areaServed": "US-MS", "availableLanguage": "English"}}}
+    body = f"""{header()}<main id="main">
+<section class="phero"><div class="wrap">{crumb_html(crumb)}<div class="eyebrow">Contact</div><h1>Contact us</h1><p class="lead">{lead}</p></div></section>
+<div class="wrap cols"><div class="main-col">
+<section class="sec"><h2 id="send-a-message">How do I send a message?</h2><p>Fill in the form below and press submit. Your message goes straight to the 1 Exam Prep team, which handles every order for this site. Include your phone number if you would rather get a call back.</p>{form}</section>
+<section class="sec"><h2 id="other-ways-to-reach-us">What are the other ways to reach us?</h2><p>Some questions are faster by phone, especially when a test date is close. Use whichever of the 3 options suits you.</p>
+<table><caption>Ways to contact 1 Exam Prep</caption><tbody><tr><th scope="row">Phone</th><td><a href="tel:{PHONE_TEL}">{PHONE}</a></td></tr><tr><th scope="row">Email</th><td><a href="mailto:{EMAIL}">{EMAIL}</a></td></tr><tr><th scope="row">Form</th><td>On this page, answered by the same team</td></tr></tbody></table></section>
+<section class="sec"><h2 id="what-to-include">What should you include in your message?</h2><p>A few details let the team recommend the right package on the first reply instead of the third. Mississippi has 50 license types on this site, and the approved books differ for each one, so the classification matters most of all.</p>
+<ul class="ticks"><li>Your license classification, such as Building Construction or Residential Builder</li><li>Your PSI test date, or the month you hope to test</li><li>Which approved books you already own</li><li>Whether you still need to file the MSBOC application</li></ul></section>
+<section class="sec"><h2 id="what-we-help-with">What can the team help with?</h2><p>Most messages fall into 4 groups. The team answers questions about the products and the licensing steps; the Mississippi State Board of Contractors decides every application.</p>
+<ol><li>Choosing between books, rentals, courses and the all-in-one packages for your license.</li><li>Orders already placed, including shipping and rental returns.</li><li>The MSBOC application and the <a href="/licensing-and-business-setup/">application service</a>.</li><li>Preparing for the 50-question <a href="/business-and-law/">Law and Business Management exam</a>.</li></ol>
+<p>Before you write, the <a href="/how-to-get-licensed/">licensing guide</a> and the <a href="/faq/">FAQ</a> answer the most common questions about dollar limits, PSI scheduling and open-book rules.</p></section>
+<section class="sec"><h2 id="who-answers">Who answers your message?</h2><p>1 Exam Prep runs this site and fulfils every order on it, so the people who read the form are the same people who pack the books and open course access. The Mississippi catalog runs from single items at {money(min(p["lo"] for p in products))} to complete rental packages at {money(max(p["hi"] for p in products))}, across {len(products)} products. Because the team sees every package, it can compare a $1,000 book set with a rental or an online course for your exact license and test date. For questions about the law itself, such as whether a job needs a license, the <a href="{MSBOC}" rel="noopener" target="_blank">Mississippi State Board of Contractors</a> has the final word.</p></section>
+{faq_html(CONTACT_FAQ)}
+{sources_html([("Mississippi State Board of Contractors", MSBOC), ("MSBOC testing information", MSBOC_TESTING), ("PSI exams", PSI)])}
+</div>{rail_popular("Popular Mississippi licenses")}</div></main>
+{footer()}"""
+    write(path, head(title, desc, path, [crumbs(crumb), page_ld, faq_ld(CONTACT_FAQ)]) + body)
+
+
 # ---------------------------------------------------------------- agent files
 def agent_files():
-    urls = ["/", "/how-to-get-licensed/", "/faq/"] + [cls_url(c) for c in live_classes] + [p["url"] for p in products]
+    urls = ["/", "/how-to-get-licensed/", "/faq/", "/contact/"] + [cls_url(c) for c in live_classes] + [p["url"] for p in products]
     sm = "".join(f"<url><loc>{SITE}{u}</loc><lastmod>{UPDATED}</lastmod></url>" for u in urls)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>\n')
     write("robots.txt", f"User-agent: *\nAllow: /\n\nUser-agent: GPTBot\nAllow: /\n\nUser-agent: ClaudeBot\nAllow: /\n\nUser-agent: Google-Extended\nAllow: /\n\nUser-agent: PerplexityBot\nAllow: /\n\nUser-agent: Bingbot\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
@@ -742,6 +789,7 @@ def agent_files():
 ## Key pages
 - [How to get a Mississippi contractor license]({SITE}/how-to-get-licensed/)
 - [FAQ]({SITE}/faq/)
+- [Contact]({SITE}/contact/)
 - [Law and Business Management exam prep]({SITE}/business-and-law/)
 
 ## Licenses
@@ -769,7 +817,7 @@ if __name__ == "__main__":
                 shutil.rmtree(d)
             elif os.path.isfile(d):
                 os.remove(d)
-    home(); guide(); faq_page(); agent_files(); not_found()
+    home(); guide(); faq_page(); contact_page(); agent_files(); not_found()
     for c in live_classes:
         class_page(c)
     for p in products:
@@ -777,6 +825,6 @@ if __name__ == "__main__":
     if CFG.get("siteUrl"):
         open("CNAME", "w").write(SITE.split("//")[1] + "\n")
     open(".nojekyll", "w").close()
-    gen = ["index.html", "404.html", "sitemap.xml", "robots.txt", "llms.txt", "agents.md", "how-to-get-licensed", "faq"] + live_classes
+    gen = ["index.html", "404.html", "sitemap.xml", "robots.txt", "llms.txt", "agents.md", "how-to-get-licensed", "faq", "contact"] + live_classes
     json.dump(gen, open(MAN, "w"), indent=0)
     print(f"Built {len(live_classes)} license pages and {len(products)} product pages into the repo root")
