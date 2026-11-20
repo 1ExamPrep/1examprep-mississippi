@@ -1,13 +1,13 @@
-/* River Steel: river green, rust steel, limestone. Archivo + Source Serif 4. */
+/* River Steel: river green, rust steel, limestone. Montserrat headings + Poppins body. */
 :root{
   --river:#16302B; --river-d:#0E211D; --river-l:#24483F; --rust:#B5562C; --rust-d:#8E3F1D; --rust-l:#E08A5C;
   --lime:#EFE6D8; --paper:#F8F4EC; --ink:#1A1F1D; --steel:#5C6A65; --line:#D9CDBA;
-  --sans:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif; --serif:"Source Serif 4",Georgia,serif;
+  --sans:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif; --serif:"Poppins",system-ui,-apple-system,"Segoe UI",sans-serif;
   --r:6px; --wrap:1180px; --ease:cubic-bezier(.2,.7,.1,1);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--paper);color:var(--ink);font:400 18px/1.65 var(--serif)}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.7 var(--serif)}
 img{max-width:100%;height:auto;display:block}
 a{color:var(--rust-d);text-decoration-thickness:1px;text-underline-offset:3px}
 a:hover{color:var(--rust)}
@@ -50,7 +50,7 @@ p{margin:0 0 1em}
 .hero h1{color:#fff;max-width:13ch}
 .hero .eyebrow{color:var(--rust-l)}
 .h-line{display:block}
-.h-line.accent{color:var(--rust-l);font-family:var(--serif);font-style:italic;font-weight:600}
+.h-line.accent{color:var(--rust-l);font-style:italic;font-weight:800}
 .js .h-line{opacity:0;transform:translateY(28px);animation:rise .9s var(--ease) forwards}
 .js .h-line:nth-child(2){animation-delay:.12s}.js .h-line:nth-child(3){animation-delay:.24s}
 @keyframes rise{to{opacity:1;transform:none}}
@@ -83,7 +83,10 @@ p{margin:0 0 1em}
 .ccard::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:100%;background:var(--rust);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
 .ccard:hover{transform:translateY(-3px);border-color:var(--river-l);box-shadow:0 10px 26px -14px rgba(14,33,29,.45);color:var(--ink)}
 .ccard:hover::after{transform:scaleX(1)}
-.c-n{font:700 1.05rem/1.2 var(--sans);color:var(--river-d)}
+.c-ic{display:grid;place-items:center;width:46px;height:46px;border-radius:10px;background:var(--lime);color:var(--river);margin-bottom:8px;transition:background .3s var(--ease),color .3s var(--ease),transform .4s var(--ease)}
+.c-ic .ic{width:26px;height:26px}
+.ccard:hover .c-ic{background:var(--rust);color:#fff;transform:rotate(-6deg) scale(1.06)}
+.c-n{font:700 1.02rem/1.25 var(--sans);color:var(--river-d)}
 .c-m{font:500 .85rem var(--sans);color:var(--steel)}
 .ccard.hide,.grp.hide{display:none}
 
@@ -142,6 +145,8 @@ tbody tr:nth-child(even){background:#FBF8F2}
 /* page hero */
 .phero{background:var(--river);color:var(--lime);padding:34px 0 46px;position:relative}
 .phero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:linear-gradient(90deg,var(--rust) 0 22%,transparent 22%)}
+.phero-ic{width:64px;height:64px;border-radius:14px;display:grid;place-items:center;background:rgba(239,230,216,.1);border:1px solid rgba(239,230,216,.25);color:var(--rust-l);margin-bottom:16px}
+.phero-ic .ic{width:36px;height:36px}
 .phero h1{color:#fff;font-size:clamp(2rem,4.4vw,3.4rem);max-width:22ch}
 .phero .lead{color:#E2DACB}
 .phero a{color:var(--rust-l)}
@@ -202,3 +207,5 @@ tbody tr:nth-child(even){background:#FBF8F2}
   *,*::before,*::after{animation:none!important;transition:none!important}
   .js .reveal,.js .h-line{opacity:1!important;transform:none!important}
 }
+.phero .wrap>.crumbs{color:#B9C4BF;margin-top:0}
+.phero .wrap>.crumbs a{color:var(--lime)}

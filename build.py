@@ -9,6 +9,12 @@ from collections import defaultdict
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "tools"))
 from msclass import classify, ptype, clean_sentences
 from mscopy import *
+ICONS = json.load(open(os.path.join(os.path.dirname(__file__), "tools", "icons.json")))
+
+
+def icon(c, cls="ic"):
+    return (f'<svg class="{cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" '
+            f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONS.get(c, ICONS["code-books-and-courses"])}</svg>')
 
 CFG = json.load(open("site-config.json"))
 SITE = CFG["siteUrl"].rstrip("/")
@@ -83,7 +89,7 @@ def cls_name(c):
 
 
 # ---------------------------------------------------------------- shared chrome
-FONTS = "https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap"
+FONTS = "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,600;0,700;0,800;1,800&family=Poppins:ital,wght@0,400;0,500;0,600;1,400&display=swap"
 
 
 def head(title, desc, path, ld, og_img="/assets/logo.png", extra=""):
@@ -349,6 +355,7 @@ def class_page(c):
 <section class="phero phero-class">
   <div class="wrap">
     {crumb_html(crumb)}
+    <div class="phero-ic">{icon(c)}</div>
     <div class="eyebrow">{e(dict((g, gn) for g, gn, _ in GROUPS)[k['group']])}</div>
     <h1>Mississippi {e(n)} exam prep</h1>
     <p class="lead">{lead}</p>
@@ -509,7 +516,7 @@ def home():
         for c in cs:
             ps = by_class[c]
             cards += (f'<a class="ccard reveal" href="{cls_url(c)}" data-name="{e(cls_name(c).lower())}">'
-                      f'<span class="c-n">{e(cls_name(c))}</span><span class="c-m">{len(ps)} packages, from {money(min(p["lo"] for p in ps))}</span></a>')
+                      f'<span class="c-ic">{icon(c)}</span><span class="c-n">{e(cls_name(c))}</span><span class="c-m">{len(ps)} packages, from {money(min(p["lo"] for p in ps))}</span></a>')
         gid = slugify(gname, 40)
         intro = {"commercial": "Commercial classifications cover jobs over $50,000. Each one has its own PSI trade exam and approved book list.",
                  "residential": "Residential licenses kick in at $50,000 for new homes and $10,000 for remodeling or roofing.",
