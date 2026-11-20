@@ -205,14 +205,14 @@ def sources_html(links):
 
 
 def pic(name, alt, cls="", w=1600, h=900, eager=False, sizes="100vw"):
-    small = f"/assets/img/{name}-800"
-    big = f"/assets/img/{name}-1600"
-    has_big = os.path.exists(f"assets/img/{name}-1600.jpg")
-    srcw = (f"{small}.webp 800w, {big}.webp 1600w" if has_big else f"{small}.webp 800w")
-    srcj = (f"{small}.jpg 800w, {big}.jpg 1600w" if has_big else f"{small}.jpg 800w")
+    """<picture> with every size of assets/img/<name>-<width>.jpg/.webp that exists."""
+    import glob
+    widths = sorted(int(re.search(r"-(\d+)\.jpg$", f).group(1)) for f in glob.glob(f"assets/img/{name}-*.jpg"))
+    srcw = ", ".join(f"/assets/img/{name}-{x}.webp {x}w" for x in widths)
+    srcj = ", ".join(f"/assets/img/{name}-{x}.jpg {x}w" for x in widths)
     load = 'fetchpriority="high"' if eager else 'loading="lazy" decoding="async"'
     return (f'<picture class="{cls}"><source type="image/webp" srcset="{srcw}" sizes="{sizes}">'
-            f'<img src="{small}.jpg" srcset="{srcj}" sizes="{sizes}" width="{w}" height="{h}" alt="{e(alt)}" {load}></picture>')
+            f'<img src="/assets/img/{name}-{widths[0]}.jpg" srcset="{srcj}" sizes="{sizes}" width="{w}" height="{h}" alt="{e(alt)}" {load}></picture>')
 
 
 def write(path, content):
@@ -576,7 +576,7 @@ def home():
       <p>Getting licensed in Mississippi takes 5 steps and usually 6 to 10 weeks. The board reviews the application before PSI lets you test, so file early and study while you wait. The full walkthrough is on the <a href="/how-to-get-licensed/">licensing guide</a>.</p>
       <ol class="timeline" data-timeline>{tl}</ol>
     </div>
-    <div class="band-img reveal">{pic("contractor", "Mississippi contractor with arms crossed in a hi-vis vest beside steel framing", w=669, h=941, sizes="(min-width: 900px) 40vw, 100vw")}</div>
+    <div class="band-img reveal">{pic("engineer", "Mississippi contractor in a white hard hat and hi-vis vest beside the river at sunset, with the State Capitol dome and a steel truss bridge behind her", w=1199, h=1312, sizes="(min-width: 900px) 40vw, 100vw")}</div>
   </div>
 </section>
 <div class="wrap">
