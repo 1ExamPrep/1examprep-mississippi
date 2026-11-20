@@ -14,7 +14,7 @@ CFG = json.load(open("site-config.json"))
 SITE = CFG["siteUrl"].rstrip("/")
 BRAND = CFG["brand"]
 PHONE, PHONE_TEL, EMAIL = CFG["phone"], CFG["phoneTel"], CFG["email"]
-OUT = "."  # GitHub Pages serves the repo root, like the other 1 Exam Prep sites
+OUT = "docs"
 STOP = {"the", "and", "for", "of", "on", "with", "to", "a", "an", "in", "by", "from", "based", "includes"}
 e = lambda s: html.escape(str(s), quote=True)
 
@@ -706,22 +706,15 @@ def not_found():
 
 
 if __name__ == "__main__":
-    # Remove only what the last build generated (listed in .build-manifest.json), never source files.
-    MAN = ".build-manifest.json"
-    if os.path.exists(MAN):
-        for d in json.load(open(MAN)):
-            if os.path.isdir(d):
-                shutil.rmtree(d)
-            elif os.path.isfile(d):
-                os.remove(d)
+    if os.path.exists(OUT):
+        shutil.rmtree(OUT)
+    os.makedirs(OUT)
+    shutil.copytree("assets", os.path.join(OUT, "assets"))
     home(); guide(); faq_page(); agent_files(); not_found()
     for c in live_classes:
         class_page(c)
     for p in products:
         product_page(p)
     if CFG.get("siteUrl"):
-        open("CNAME", "w").write(SITE.split("//")[1] + "\n")
-    open(".nojekyll", "w").close()
-    gen = ["index.html", "404.html", "sitemap.xml", "robots.txt", "llms.txt", "agents.md", "how-to-get-licensed", "faq"] + live_classes
-    json.dump(gen, open(MAN, "w"), indent=0)
-    print(f"Built {len(live_classes)} license pages and {len(products)} product pages into the repo root")
+        open(os.path.join(OUT, "CNAME"), "w").write(SITE.split("//")[1] + "\n")
+    print(f"Built {len(live_classes)} license pages and {len(products)} product pages into {OUT}/")
