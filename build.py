@@ -245,6 +245,49 @@ def card(p, show_class=False):
             f'<span class="ptag">{sub}</span><h3 id="p-{p["slug"][:60]}">{e(p["title"])}</h3><p class="price">{cmpx}<b>From {money(p["lo"])}</b></p></a></article>')
 
 
+# ---------------------------------------------------------------- sidebar rail
+POPULAR = ["building-construction", "residential-builder", "residential-remodeler", "mechanical", "roofing-sheet-metal-siding", "business-and-law"]
+
+
+def rail_call():
+    return (f'<div class="r-card r-call"><p class="r-h">Need help choosing?</p><p>Tell the 1 Exam Prep team your license and test date, '
+            f'and they will match you with the right books.</p><a class="r-phone" href="tel:{PHONE_TEL}">{PHONE}</a>'
+            f'<p class="r-small">{EMAIL}</p></div>')
+
+
+def rail_class(c, ps, lo, first_hid):
+    x = CLASSES[c].get("exam")
+    rows = [("Packages", str(len(ps))), ("From", money(lo))]
+    if x:
+        rows += [("Questions", str(x["q"]))] + ([("Time", f"{x['mins']} min")] if x.get("mins") else []) + [("To pass", f"{x['pass_']}%")]
+    else:
+        rows += [("Format", "Open book"), ("To pass", "70%")]
+    dl = "".join(f"<div><dt>{a}</dt><dd>{b}</dd></div>" for a, b in rows)
+    return (f'<aside class="rail" aria-label="{e(cls_name(c))} quick facts"><div class="rail-in">'
+            f'<div class="r-card r-facts"><div class="r-ic">{icon(c)}</div><p class="r-h">{e(cls_name(c))} at a glance</p><dl>{dl}</dl>'
+            f'<a class="btn r-btn" href="#{first_hid}">See packages</a></div>'
+            f'<div class="r-card"><p class="r-h">Also required</p><p>Every applicant passes the 50-question Law and Business Management exam.</p>'
+            f'<a href="/business-and-law/">Law and Business prep</a></div>'
+            f'{rail_call()}</div></aside>')
+
+
+def rail_product(p, buy, price):
+    return (f'<aside class="rail" aria-label="Buy {e(p["title"])}"><div class="rail-in">'
+            f'<div class="r-card r-buy"><p class="r-h">{e(p["tlabel"])}</p><p class="r-price">{price}</p>'
+            f'<a class="btn r-btn" href="{buy}" rel="nofollow">Buy now</a><p class="r-small">Secure checkout at 1 Exam Prep</p></div>'
+            f'<div class="r-card"><div class="r-ic">{icon(p["cls"])}</div><p class="r-h">{e(cls_name(p["cls"]))}</p>'
+            f'<p>Compare all {len(by_class[p["cls"]])} packages for this license.</p><a href="{cls_url(p["cls"])}">See every package</a></div>'
+            f'{rail_call()}</div></aside>')
+
+
+def rail_popular(label):
+    li = "".join(f'<li><a href="{cls_url(c)}"><span class="r-li-ic">{icon(c)}</span>{e(cls_name(c))}</a></li>' for c in POPULAR if by_class.get(c))
+    return (f'<aside class="rail" aria-label="{e(label)}"><div class="rail-in">'
+            f'<div class="r-card"><p class="r-h">Popular licenses</p><ul class="r-list">{li}</ul>'
+            f'<a class="btn r-btn" href="/#find-your-license">All 50 licenses</a></div>'
+            f'{rail_call()}</div></aside>')
+
+
 # ---------------------------------------------------------------- class pages
 GROUP_CLASSES = {g: [c for c in CLASSES if CLASSES[c]["group"] == g and by_class.get(c)] for g, *_ in GROUPS}
 live_classes = [c for g in GROUP_CLASSES for c in GROUP_CLASSES[g]]
@@ -334,6 +377,7 @@ def class_page(c):
         nb = len([1 for i in range(0, len(big), 9)])
         heads = ["Which package should you buy?"] + ["More complete packages"] * (nb - 1) + ["Books, courses and add-ons"] + ["More books and add-ons"] * (len(chunks) - nb - 1)
     used_ids = set()
+    first_hid = slugify(heads[0], 40)
     grid_html = ""
     for i, (h, ch) in enumerate(zip(heads, chunks)):
         hid = slugify(h, 40)
@@ -377,6 +421,7 @@ def class_page(c):
 {faq_html(qas)}
 {sources_html([("Mississippi State Board of Contractors", MSBOC), ("MSBOC testing information", MSBOC_TESTING), ("MSBOC license classifications", MSBOC_CLASSES), ("PSI exams", PSI)])}
 </div>
+{rail_class(c, ps, lo, first_hid)}
 </div>
 </main>
 {footer()}"""
@@ -481,7 +526,7 @@ def product_page(p):
 <section class="sec"><h2 id="other-packages">Other {e(n)} packages</h2><p>Compare these before you buy, or see every option on the <a href="{cls_url(c)}">{e(n)} page</a>.</p><ul class="links">{sib}<li><a href="/how-to-get-licensed/">Steps to a Mississippi license</a></li></ul></section>
 {faq_html(qas)}
 {sources_html([("MSBOC testing information", MSBOC_TESTING), ("Mississippi State Board of Contractors", MSBOC), ("PSI exams", PSI)])}
-</div></div>
+</div>{rail_product(p, buy, price)}</div>
 </div>
 </main>
 {footer()}"""
@@ -645,11 +690,11 @@ def guide():
     body = f"""{header()}<main id="main">
 <section class="phero"><div class="wrap">{crumb_html(crumb)}<div class="eyebrow">Licensing guide</div><h1>How to get a Mississippi contractor license</h1><p class="lead">{lead}</p></div></section>
 <div class="wrap cols"><div class="main-col">
-{pic("skyline", "Downtown Jackson skyline and the Mississippi State Capitol dome at sunset", cls="wide reveal", w=1036, h=414, sizes="(min-width: 900px) 800px, 100vw")}
+{pic("skyline", "Downtown Jackson skyline and the Mississippi State Capitol dome at sunset", cls="wide reveal", w=1036, h=414, sizes="(min-width: 900px) 760px, 100vw")}
 {sec_html}
 {faq_html(GUIDE_FAQ)}
 {sources_html([("MSBOC license applications", MSBOC_LICENSES), ("MSBOC testing information", MSBOC_TESTING), ("MSBOC license classifications", MSBOC_CLASSES), ("Mississippi 811", MS811), ("PSI exams", PSI)])}
-</div></div></main>
+</div>{rail_popular("Popular Mississippi licenses")}</div></main>
 {footer()}"""
     write(path, head(title, desc, path, [crumbs(crumb), page_ld, howto, faq_ld(GUIDE_FAQ)]) + body)
 
@@ -678,7 +723,7 @@ def faq_page():
 <ul class="links"><li><a href="/building-construction/">Building Construction</a> for commercial general contractors</li><li><a href="/residential-builder/">Residential Builder</a> for new homes over $50,000</li><li><a href="/residential-remodeler/">Residential Remodeler</a> for remodels over $10,000</li><li><a href="/mechanical/">Mechanical</a> for HVAC, plumbing and gas piping contractors</li><li><a href="/roofing-sheet-metal-siding/">Roofing, Sheet Metal and Siding</a> for commercial roofers</li><li><a href="/master-electrician-contractor/">Electrical</a> for commercial electrical contractors</li></ul></section>
 <section class="sec"><h2 id="still-have-a-question">Still have a question?</h2><p>Call {PHONE} or email <a href="mailto:{EMAIL}">{EMAIL}</a>, and the 1 Exam Prep team will match you with the right books. You can also start from the <a href="/how-to-get-licensed/">licensing guide</a>, the <a href="/business-and-law/">Law and Business page</a> or the <a href="/#find-your-license">full list of licenses</a>.</p></section>
 {sources_html([("MSBOC testing information", MSBOC_TESTING), ("Mississippi State Board of Contractors", MSBOC), ("PSI exams", PSI)])}
-</div></div></main>
+</div>{rail_popular("Popular Mississippi licenses")}</div></main>
 {footer()}"""
     write(path, head(title, desc, path, [crumbs(crumb), faq_ld(qas)]) + body)
 
