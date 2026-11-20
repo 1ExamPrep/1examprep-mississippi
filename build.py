@@ -8,6 +8,7 @@ import html, json, os, re, shutil, sys
 from collections import defaultdict
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "tools"))
 from msclass import classify, ptype, clean_sentences
+import schemakit
 from mscopy import *
 ICONS = json.load(open(os.path.join(os.path.dirname(__file__), "tools", "icons.json")))
 
@@ -445,14 +446,16 @@ def product_page(p):
     ]
     crumb = [("Home", "/"), (n, cls_url(c)), (short, path)]
     offers = {"@type": "Offer", "price": f"{p['lo']:.2f}", "priceCurrency": "USD", "availability": "https://schema.org/InStock",
-              "url": SITE + path, "seller": {"@type": "Organization", "name": "1 Exam Prep"}, "priceValidUntil": "2027-12-31",
-              "itemCondition": "https://schema.org/NewCondition",
-              "shippingDetails": {"@type": "OfferShippingDetails", "shippingDestination": {"@type": "DefinedRegion", "addressCountry": "US"}},
-              "hasMerchantReturnPolicy": {"@type": "MerchantReturnPolicy", "applicableCountry": "US", "url": "https://1examprep.com/policies/refund-policy",
-                                          "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow", "merchantReturnDays": 30}}
+              "url": SITE + path, "seller": {"@type": "Organization", "name": "1 Exam Prep", "url": "https://1examprep.com"},
+              "priceValidUntil": "2027-12-31"}
     if p["hi"] > p["lo"]:
         offers = {"@type": "AggregateOffer", "lowPrice": f"{p['lo']:.2f}", "highPrice": f"{p['hi']:.2f}", "priceCurrency": "USD",
-                  "offerCount": 2, "availability": "https://schema.org/InStock", "url": SITE + path}
+                  "offerCount": 2, "availability": "https://schema.org/InStock", "url": SITE + path,
+                  "seller": {"@type": "Organization", "name": "1 Exam Prep", "url": "https://1examprep.com"}}
+    cond = schemakit.condition(p["title"], "")
+    if cond:
+        offers["itemCondition"] = cond
+    offers.update(schemakit.delivery_fields(p["title"]))
     prod = {"@context": "https://schema.org", "@type": "Product", "name": p["title"], "url": SITE + path, "sku": str(p["sku"]),
             "description": desc, "brand": {"@type": "Brand", "name": "1 Exam Prep"}, "category": f"Mississippi {n} exam prep",
             "image": [p["img"]] if p["img"] else [SITE + "/assets/img/hero-1600.jpg"], "offers": offers}
