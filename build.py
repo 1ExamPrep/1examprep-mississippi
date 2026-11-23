@@ -216,6 +216,55 @@ def pic(name, alt, cls="", w=1600, h=900, eager=False, sizes="100vw"):
             f'<img src="/assets/img/{name}-{widths[0]}.jpg" srcset="{srcj}" sizes="{sizes}" width="{w}" height="{h}" alt="{e(alt)}" {load}></picture>')
 
 
+def takeaways(items):
+    """Key takeaways box, same markup as the other Pass Your sites."""
+    items = [i for i in items if i]
+    if not items:
+        return ""
+    li = "".join(f"<li>{e(i)}</li>" for i in items)
+    return (f'<aside class="takeaways reveal" aria-labelledby="key-takeaways"><h2 id="key-takeaways">Key takeaways</h2><ul>{li}</ul>'
+            f'<p class="upd">Updated <time datetime="{UPDATED}">{UPDATED_TEXT}</time> · prices checked against the 1 Exam Prep store</p></aside>')
+
+
+def class_takeaways(c):
+    k = CLASSES[c]
+    ps = by_class[c]
+    n = k["name"]
+    out = [f"{len(ps)} Mississippi {n} prep products, from {money(min(p['lo'] for p in ps))} to {money(max(p['hi'] for p in ps))}."]
+    x = k.get("exam")
+    if x:
+        out.append(f"The {n} exam at PSI has {x['q']} questions" + (f" in {x['mins']} minutes" if x.get("mins") else "") + f", open book, with {x['pass_']}% to pass.")
+    elif k["group"] == "trade":
+        out.append(LOCAL_TRADE + ".")
+    elif k["group"] != "business":
+        out.append(f"PSI gives the {n} trade exam open book, and MSBOC trade exams need 70% to pass.")
+    if k["group"] in ("commercial", "specialty"):
+        out.append("A commercial license is needed for jobs over $50,000, including labor and materials.")
+    elif k["group"] == "residential":
+        out.append("A residential license is needed for new homes over $50,000 and for remodeling or roofing over $10,000.")
+    if c != "business-and-law" and k["group"] != "trade":
+        out.append("Every applicant also passes the 50-question Law and Business Management exam at 70%.")
+    out.append("Every Buy now button goes straight to secure checkout at our fulfillment center, 1 Exam Prep.")
+    return out[:5]
+
+
+def product_takeaways(p, price):
+    c = p["cls"]
+    n = cls_name(c)
+    out = [f"{p['tlabel']} for the Mississippi {n} exam: {price}" + (f", down from {money(p['compare'])}." if p["compare"] > p["hi"] else ".")]
+    x = CLASSES[c].get("exam")
+    if x:
+        out.append(f"The {n} exam has {x['q']} questions and needs {x['pass_']}% to pass, open book at PSI.")
+    if not p["ms"]:
+        out.append("A national edition that also fits the Mississippi exam.")
+    if CLASSES[c]["group"] == "trade":
+        out.append(LOCAL_TRADE + ".")
+    elif c != "business-and-law":
+        out.append("Every Mississippi applicant also takes the 50-question Law and Business Management exam.")
+    out.append("Books ship free by USPS Media Mail inside the U.S." if schemakit.ships(p["title"], "") else "Online access arrives by email, with nothing to ship.")
+    return out[:5]
+
+
 def write(path, content):
     fp = os.path.join(OUT, path.strip("/"), "index.html") if not path.endswith((".txt", ".xml", ".md", ".html", ".json")) else os.path.join(OUT, path.strip("/"))
     os.makedirs(os.path.dirname(fp), exist_ok=True)
@@ -414,6 +463,7 @@ def class_page(c):
 </section>
 <div class="wrap cols">
 <div class="main-col">
+{takeaways(class_takeaways(c))}
 <section class="sec"><h2 id="who-needs-it">Who needs the Mississippi {e(n)} license?</h2><p>{who}</p></section>
 <section class="sec"><h2 id="what-is-on-the-exam">What is on the {e(n)} exam?</h2><p>{exam_line(c)} MSBOC lets candidates use only the references named in the PSI bulletin, which is why every book package here matches that list.</p>
 <table class="facts-table reveal"><caption>{e(n)} exam at a glance</caption><tbody>{table}</tbody></table></section>
@@ -521,6 +571,7 @@ def product_page(p):
   </div>
 </div>
 <div class="cols"><div class="main-col">
+{takeaways(product_takeaways(p, price))}
 <section class="sec"><h2 id="whats-included">What does the {e(short)} include?</h2><p>{about}</p><ul class="ticks">{inc}</ul></section>
 <section class="sec"><h2 id="which-exam">Which Mississippi exam is it for?</h2><p>The <a href="{cls_url(c)}">Mississippi {e(n)} license</a> {e(CLASSES[c]['scope'])}. {e(threshold_text(c))} {e(exam_line(c))}</p></section>
 <section class="sec"><h2 id="how-to-study">How should you study with it?</h2><p>{e(STUDY[p['tkey']])} Pair it with the <a href="/business-and-law/">Law and Business Management prep</a>, since every applicant sits that 50-question exam too.</p></section>
@@ -612,6 +663,11 @@ def home():
 </section>
 <div class="marquee" aria-hidden="true"><div class="m-track">{''.join(f'<span>{e(cls_name(c))}</span>' for c in live_classes[:24])}</div></div>
 <div class="wrap">
+{takeaways([f"{total} products across {ncls} Mississippi licenses, from {money(min(p['lo'] for p in products))} to {money(max(p['hi'] for p in products))}.",
+            "PSI gives every MSBOC exam, and every exam is open book with a 70% passing score.",
+            "Every applicant passes the 50-question Law and Business Management exam plus a trade exam.",
+            "A license is needed for commercial jobs and new homes over $50,000, and for remodeling or roofing over $10,000.",
+            "Every Buy now button goes straight to secure checkout at our fulfillment center, 1 Exam Prep."])}
 <section class="sec intro-sec"><h2 id="find-your-license">Which Mississippi license do you need?</h2><p>MSBOC sorts contractors by classification, and each classification has its own PSI trade exam and approved books. Type a trade in the search box above, or scan the groups below. Every card opens the exam facts, the dollar limit and every package for that license.</p><p class="no-match" hidden>No license matches that search. Try a shorter word, or call {PHONE}.</p></section>
 {groups_html}
 </div>
@@ -691,6 +747,10 @@ def guide():
     body = f"""{header()}<main id="main">
 <section class="phero"><div class="wrap">{crumb_html(crumb)}<div class="eyebrow">Licensing guide</div><h1>How to get a Mississippi contractor license</h1><p class="lead">{lead}</p></div></section>
 <div class="wrap cols"><div class="main-col">
+{takeaways(["Mississippi licenses by dollar limit: commercial and new homes over $50,000, remodeling or roofing over $10,000.",
+            "Apply to MSBOC first; PSI emails a scheduling notice only after the board approves you.",
+            "Pass 2 open-book exams at PSI, your trade exam and the 50-question Law and Business exam, each at 70%.",
+            "Most applicants finish in 6 to 10 weeks, and paperwork causes more delays than the exams."])}
 {pic("skyline", "Downtown Jackson skyline and the Mississippi State Capitol dome at sunset", cls="wide reveal", w=1036, h=414, sizes="(min-width: 900px) 760px, 100vw")}
 {sec_html}
 {faq_html(GUIDE_FAQ)}
@@ -714,6 +774,10 @@ def faq_page():
     body = f"""{header()}<main id="main">
 <section class="phero"><div class="wrap">{crumb_html(crumb)}<div class="eyebrow">Questions</div><h1>Mississippi contractor exam FAQ</h1><p class="lead">{lead}</p></div></section>
 <div class="wrap cols"><div class="main-col">
+{takeaways(["Commercial jobs and new homes over $50,000 need an MSBOC license; remodeling or roofing needs one over $10,000.",
+            "PSI gives every exam open book, and you need 70% to pass.",
+            "Law and Business Management is 50 questions in 2 hours, required of every applicant.",
+            "Cities and counties, not the state, license journeyman electricians and plumbers."])}
 {faq_html(qas[:half], "licenses-and-limits", "Licenses and dollar limits")}
 {faq_html(qas[half:], "exams-and-scheduling", "Exams and scheduling")}
 <section class="sec"><h2 id="exam-facts-at-a-glance">What are the key exam numbers?</h2><p>Mississippi exam rules come down to a few numbers. The table collects the ones candidates ask about most, drawn from MSBOC and the PSI bulletin.</p>
@@ -759,6 +823,10 @@ def contact_page():
     body = f"""{header()}<main id="main">
 <section class="phero"><div class="wrap">{crumb_html(crumb)}<div class="eyebrow">Contact</div><h1>Contact us</h1><p class="lead">{lead}</p></div></section>
 <div class="wrap cols"><div class="main-col">
+{takeaways([f"Reach 1 Exam Prep by the form on this page, by phone at {PHONE} or by email at {EMAIL}.",
+            "Include your license classification, your PSI test date and the books you already own.",
+            f"The same team that ships every order answers, across {len(products)} Mississippi products.",
+            "MSBOC decides every application; the team helps with products and the paperwork."])}
 <section class="sec"><h2 id="send-a-message">How do I send a message?</h2><p>Fill in the form below and press submit. Your message goes straight to the 1 Exam Prep team, which handles every order for this site. Include your phone number if you would rather get a call back.</p>{form}</section>
 <section class="sec"><h2 id="other-ways-to-reach-us">What are the other ways to reach us?</h2><p>Some questions are faster by phone, especially when a test date is close. Use whichever of the 3 options suits you.</p>
 <table><caption>Ways to contact 1 Exam Prep</caption><tbody><tr><th scope="row">Phone</th><td><a href="tel:{PHONE_TEL}">{PHONE}</a></td></tr><tr><th scope="row">Email</th><td><a href="mailto:{EMAIL}">{EMAIL}</a></td></tr><tr><th scope="row">Form</th><td>On this page, answered by the same team</td></tr></tbody></table></section>

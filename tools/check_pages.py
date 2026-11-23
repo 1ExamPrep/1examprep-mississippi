@@ -152,6 +152,8 @@ def check(path, html):
         figs = len(FIG.findall(body_txt))
         if figs < n / 100:
             opps.append(f"{figs} figures for {n} words")
+    if n > 600 and not re.search(r"key takeaways", body_txt, re.I):
+        opps.append("no Key takeaways box on a page over 600 words")
     if not main.find(["ul", "ol", "table"]):
         opps.append("no list or table")
     faqld = any("FAQPage" in str(b.get("@type")) for b in lds if isinstance(b, dict))

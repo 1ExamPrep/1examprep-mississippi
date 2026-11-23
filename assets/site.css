@@ -243,3 +243,12 @@ tbody tr:nth-child(even){background:#FBF8F2}
 .form-embed{position:relative;min-height:200px}
 .form-fallback{margin:0;padding:12px 4px;color:var(--steel);font:500 .95rem var(--sans)}
 .form-embed.loaded .form-fallback{display:none}
+
+/* Key takeaways box (same markup as the other Pass Your sites) */
+.takeaways{background:#fff;border:1px solid var(--line);border-left:4px solid var(--rust);border-radius:0 10px 10px 0;padding:22px 26px 18px;margin:46px 0 0}
+.takeaways h2{font-size:1.2rem;margin:0 0 10px}
+.takeaways ul{list-style:none;margin:0;padding:0}
+.takeaways li{position:relative;padding:6px 0 6px 26px;max-width:none;line-height:1.5}
+.takeaways li::before{content:"";position:absolute;left:3px;top:14px;width:11px;height:6px;border-left:2px solid var(--rust);border-bottom:2px solid var(--rust);transform:rotate(-45deg)}
+.takeaways .upd{margin:10px 0 0;font:500 .8rem var(--sans);color:var(--steel)}
+.wrap>.takeaways{max-width:900px}
