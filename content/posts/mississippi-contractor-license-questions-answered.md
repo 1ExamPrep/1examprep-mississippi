@@ -89,6 +89,19 @@ No state journeyman or master license exists. Individual electricians and plumbe
 
 MSBOC has reciprocal agreements with several state boards that can waive a trade exam for contractors licensed there. Law and Business Management is still required. If you hold a license in another state, ask MSBOC whether an agreement covers your classification before you study for a trade exam you may not need.
 
+## Where can you read about other licenses?
+
+Licensing rules change from state to state and trade to trade, so we answer the most searched questions for each one in its own post. If you work across state lines or hold more than one trade license, these companion posts cover the other exams our sites prepare you for:
+
+- [Texas contractor license: 15 questions answered](https://passyourtexascontractorexam.com/blog/texas-contractor-license-questions-answered/)
+- [Virginia contractor license: 15 questions answered](https://passyourvirginiacontractorexam.com/blog/virginia-contractor-license-questions-answered/)
+- [Nevada contractor license: 15 questions answered](https://passyournevadacontractorexam.com/blog/nevada-contractor-license-questions-answered/)
+- [Florida contractor exam: 15 questions answered](https://passyourfloridacontractorexam.com/blog/florida-contractor-exam-questions-answered/)
+- [Master electrician exam: 15 questions answered](https://passyourmasterelectricianexam.com/blog/master-electrician-exam-questions-answered/)
+- [Plumbing license exam: 15 questions answered](https://passyourplumbingexam.com/blog/plumbing-license-exam-questions-answered/)
+- [HVAC license exam: 15 questions answered](https://passyourhvacexam.com/blog/hvac-license-exam-questions-answered/)
+- [NASCLA exam: 15 questions answered](https://passyournasclaexam.com/blog/nascla-exam-questions-answered/)
+
 ## Frequently asked questions
 
 Quick answers to a few more questions people ask about the exam and license.
