@@ -3,6 +3,7 @@
 > Exam prep for Mississippi State Board of Contractors (MSBOC) licenses. PSI gives every exam open book. All applicants pass the 50-question Law and Business Management exam (70%, 2 hours) plus a trade exam. Orders are fulfilled by 1 Exam Prep. Phone (877) 775-9400, email sales@1examprep.com. Updated 2026-11-19.
 
 ## Key pages
+- [Blog](https://passyourmississippicontractorexam.com/blog/)
 - [How to get a Mississippi contractor license](https://passyourmississippicontractorexam.com/how-to-get-licensed/)
 - [FAQ](https://passyourmississippicontractorexam.com/faq/)
 - [Contact](https://passyourmississippicontractorexam.com/contact/)
