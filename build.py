@@ -143,6 +143,7 @@ def header():
       <a href="/business-and-law/">Law and Business exam</a>
       <a href="/blog/">Blog</a>
       <a href="/faq/">FAQ</a>
+      <a href="/reviews/">Reviews</a>
       <a href="/contact/">Contact</a>
     </nav>
     <a class="call" href="tel:{PHONE_TEL}">{PHONE}</a>
@@ -164,7 +165,7 @@ def footer():
       <div class="f-brand">
         <a class="brand" href="/"><img class="logo" src="/assets/logo-nav-light.png" width="217" height="56" alt="Pass Your Mississippi Contractor Exam"></a>
         <p>{e(CFG['tagline'])}</p>
-        <p>Orders ship from 1 Exam Prep. Call <a href="tel:{PHONE_TEL}">{PHONE}</a>, email <a href="mailto:{EMAIL}">{EMAIL}</a> or use the <a href="/contact/">contact form</a>. Read the <a href="/blog/">blog</a> for answers to common exam questions.</p>
+        <p>Orders ship from 1 Exam Prep. Call <a href="tel:{PHONE_TEL}">{PHONE}</a>, email <a href="mailto:{EMAIL}">{EMAIL}</a> or use the <a href="/contact/">contact form</a>. Read <a href="/reviews/">customer reviews</a> or the <a href="/blog/">blog</a> for answers to common exam questions.</p>
       </div>
       {''.join(groups)}
     </div>
@@ -847,9 +848,26 @@ def contact_page():
     write(path, head(title, desc, path, [crumbs(crumb), page_ld, faq_ld(CONTACT_FAQ)]) + body)
 
 
+def reviews_page():
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "tools")); import reviewskit as rk
+    c = rk.content(BRAND, "Mississippi contractor exam", PHONE, PHONE_TEL, EMAIL)
+    path = rk.PATH
+    crumb = [("Home", "/"), ("Reviews", path)]
+    secs = "".join(f'<section class="sec"><h2 id="{i}">{h}</h2>{b}</section>\n' for i, h, b in c["sections"])
+    body = f"""{header()}<main id="main">
+<section class="phero"><div class="wrap">{crumb_html(crumb)}<div class="eyebrow">Reviews</div><h1>{c["h1"]}</h1><p class="lead">{c["lead"]}</p></div></section>
+<div class="wrap cols"><div class="main-col">
+{takeaways(c["takeaways"])}
+{secs}{faq_html(c["faq"])}
+{sources_html(c["sources"])}
+</div>{rail_popular("Popular Mississippi licenses")}</div></main>
+{footer()}"""
+    write(path, head(c["title"], c["desc"], path, [crumbs(crumb), rk.page_ld(SITE, c["title"], c["desc"], UPDATED, SITE + "/#org"), faq_ld(c["faq"])]) + body)
+
+
 # ---------------------------------------------------------------- agent files
 def agent_files():
-    urls = ["/", "/how-to-get-licensed/", "/faq/", "/contact/"] + BLOG_URLS + [cls_url(c) for c in live_classes] + [p["url"] for p in products]
+    urls = ["/", "/how-to-get-licensed/", "/faq/", "/contact/", "/reviews/"] + BLOG_URLS + [cls_url(c) for c in live_classes] + [p["url"] for p in products]
     sm = "".join(f"<url><loc>{SITE}{u}</loc><lastmod>{UPDATED}</lastmod></url>" for u in urls)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>\n')
     write("robots.txt", f"User-agent: *\nAllow: /\n\nUser-agent: GPTBot\nAllow: /\n\nUser-agent: ClaudeBot\nAllow: /\n\nUser-agent: Google-Extended\nAllow: /\n\nUser-agent: PerplexityBot\nAllow: /\n\nUser-agent: Bingbot\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
@@ -863,6 +881,7 @@ def agent_files():
 - [How to get a Mississippi contractor license]({SITE}/how-to-get-licensed/)
 - [FAQ]({SITE}/faq/)
 - [Contact]({SITE}/contact/)
+- [Customer reviews]({SITE}/reviews/)
 - [Law and Business Management exam prep]({SITE}/business-and-law/)
 
 ## Licenses
@@ -890,7 +909,7 @@ if __name__ == "__main__":
                 shutil.rmtree(d)
             elif os.path.isfile(d):
                 os.remove(d)
-    home(); guide(); faq_page(); contact_page()
+    home(); guide(); faq_page(); contact_page(); reviews_page()
     sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "tools")); import blogpages
     BLOG_URLS = blogpages.build(globals())
     agent_files(); not_found()
@@ -901,6 +920,6 @@ if __name__ == "__main__":
     if CFG.get("siteUrl"):
         open("CNAME", "w").write(SITE.split("//")[1] + "\n")
     open(".nojekyll", "w").close()
-    gen = ["index.html", "404.html", "sitemap.xml", "robots.txt", "llms.txt", "agents.md", "how-to-get-licensed", "faq", "contact", "blog"] + live_classes
+    gen = ["index.html", "404.html", "sitemap.xml", "robots.txt", "llms.txt", "agents.md", "how-to-get-licensed", "faq", "contact", "reviews", "blog"] + live_classes
     json.dump(gen, open(MAN, "w"), indent=0)
     print(f"Built {len(live_classes)} license pages and {len(products)} product pages into the repo root")
